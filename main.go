@@ -59,6 +59,7 @@ func main() {
 
     client.InitRDAAPI("http://tutorgroupapi.tutorabc.com/ReservationDataAccess")
     client.InitPassportAPI("http://apitw.passport.tutorabc.com/web")
+    client.InitSMS("http://sms.tutorabc.com/twapi")
 
     client.Setup(config.DB)
     defer client.CloseDB()

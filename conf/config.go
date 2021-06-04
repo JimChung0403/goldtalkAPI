@@ -42,12 +42,18 @@ type Database struct {
     OpenConns   int
 }
 
+type SMS struct {
+    AppSn        string `toml:"appsn"`
+}
+
+
 // 对应 conf/service.conf 的结构。
 type Config struct {
     Server ServerConfig `toml:"server"`
     Log    log.Config   `toml:"log"`
 
     DB Database `toml:"database"`
+    SMS SMS `toml:"sms"`
     //RedisConf            redis.Config         `toml:"redis"`
     //DApi                 client.Config        `toml:"d_api"`
 }
