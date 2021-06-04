@@ -3,7 +3,6 @@ package rpc
 import (
     "context"
     "errors"
-    "fmt"
     "goldtalkAPI/conf"
     "goldtalkAPI/pkg/client"
     "goldtalkAPI/pkg/rpcmodel"
@@ -22,11 +21,6 @@ func SendSMSBatch(ctx context.Context, data []*rpcmodel.SendSmsBatch) (err error
         Appsn:                 conf.Conf.SMS.AppSn,
         Smstype:               Notify,
     }
-
-
-    fmt.Println(client.SMSAPI.R().SetBody(util.JsonString(req)).Post("/twapi/batchAllTypeSendSMS"))
-
-    return
     resp, err := client.SMSAPI.R().SetBody(util.JsonString(req)).Post("/batchAllTypeSendSMS")
     apiResp := &rpcmodel.SMSResponse{}
     err = util.JsonUnmarshalFromString(resp.String(), apiResp)

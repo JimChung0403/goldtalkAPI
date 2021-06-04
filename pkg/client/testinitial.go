@@ -12,5 +12,5 @@ func InitClients(config conf.Config) {
     InitRDAAPI("http://httpbin.org")
     InitPassportAPI("http://apitw.passport.tutorabc.com/web")
 	InitSMS("http://sms.tutorabc.com/twapi")
-	Setup(config.DB)
+	//Setup(config.DB)
 }
