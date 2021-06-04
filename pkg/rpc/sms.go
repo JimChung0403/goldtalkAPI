@@ -16,6 +16,7 @@ const (
 )
 
 func SendSMSBatch(ctx context.Context, data []*rpcmodel.SendSmsBatch) (err error) {
+    return
     req := &rpcmodel.SendSmsBatchReq{
         Sendsmsmessagereqlist: data,
         Appsn:                 conf.Conf.SMS.AppSn,
