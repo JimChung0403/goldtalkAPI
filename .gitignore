@@ -1,0 +1,30 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+
+*.exe
+*.test
+*.prof
+.DS_Store
+
+# Intellij
+*.iml
+.idea/
+
+# VSC
+.vscode/
+debug
+
+# DiDi specific
+output
+nohup.out
+_upgrade
+*.pid
+sftp-config.json
+client/log/
+[a-zA-Z]*/log/
+*.log
+
+# Goland
+**/.statsd/*
+
+**/log/*
+
