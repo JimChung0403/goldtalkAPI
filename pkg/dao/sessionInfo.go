@@ -17,9 +17,9 @@ type SessionInfo struct {
     Topic            string    `gorm:"topic"`
 }
 
-func GetSessionInfoAtStartTime(start string) (data []*SessionInfo, err error) {
+func GetSessionInfoAtTimeRange(start string, end string) (data []*SessionInfo, err error) {
     if err := client.DB.Where(
-        "session_start_time = ? and channel_id = 1", start,
+        "session_start_time >= ? and session_end_time < ? and channel_id = 1 and valid = 1", start, end,
     ).Find(&data).Error; err != nil {
         return nil, err
     }

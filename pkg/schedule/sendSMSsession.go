@@ -17,21 +17,24 @@ const (
     contentFmt = "%s %s，快到上課時間囉！提醒您，開課前3分鐘，點擊以下連結進入教室。%s"
     courseUrl  = "https://www.gogoldtalk.com/course/%s"
     signature  = "TutorABC"
+
+    cronTimer = time.Minute * 10
+    preClassTime = time.Hour
 )
 
 func SchSendSmsAtSessionTime() {
 
-    var timer *time.Ticker = time.NewTicker(time.Minute * 10)
+    var timer = time.NewTicker(cronTimer)
     defer timer.Stop()
     for {
         select {
         case <-timer.C:
             ctx := trace.NewContext(context.Background(), nil)
             log.Infof("SchSendSmsAtSessionTime||%v||start at %s", trace.FromContext(ctx), util.NowDateTimeStr())
-            now := util.NowDateTime()
-            dataList, err := dao.GetSessionInfoAtStartTime(util.TimeMin2Str(now.Add(1 * time.Hour)))
+            sessST := util.NowDateTime().Add(preClassTime)
+            sessET := util.NowDateTime().Add(preClassTime).Add(cronTimer)
+            dataList, err := dao.GetSessionInfoAtTimeRange(util.TimeMin2Str(sessST), util.TimeMin2Str(sessET))
             log.Infof("SchSendSmsAtSessionTime||%v||dataList %s", trace.FromContext(ctx), util.JsonString(dataList))
-
             if err != nil {
                 log.Errorf("_com_sch_error||%v||SchSendSmsAtSessionTime error||err=%v", trace.FromContext(ctx), err)
                 break
@@ -39,15 +42,14 @@ func SchSendSmsAtSessionTime() {
             for i, _ := range dataList {
                 go SendSmsBySessionInfo(ctx, dataList[i])
             }
-
-
         }
     }
     return
 }
 
 func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
-    dLock := util.NewDLock(fmt.Sprintf("run_sendSMS_%d", info.ID), time.Minute*10)
+    //避免分布式, 重複執行
+    dLock := util.NewDLock(fmt.Sprintf("run_sendSMS_%d", info.ID), cronTimer * 2)
     setLock, err := dLock.SetLock(ctx)
     if err != nil {
         log.Errorf("_com_sch_error||%v||SetLock error||err=%v", trace.FromContext(ctx), err)
@@ -109,7 +111,6 @@ func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
 
         //err = rpc.SendSMSBatch(ctx, smsReq)
         log.Infof("%v||SendSMSBatch: %s||session: %v", trace.ContextString(ctx), err, util.JsonString(info))
-
     }
     return
 }
