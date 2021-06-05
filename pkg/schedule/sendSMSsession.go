@@ -21,7 +21,7 @@ const (
 
 func SchSendSmsAtSessionTime() {
 
-    var timer *time.Ticker = time.NewTicker(time.Second * 10)
+    var timer *time.Ticker = time.NewTicker(time.Minute * 10)
     defer timer.Stop()
     for {
         select {
@@ -82,7 +82,7 @@ func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
         smsReq := []*rpcmodel.SendSmsBatch{}
         for sn, cInfo := range cusBaseInfoMap {
             if _, ok := cMap[sn]; ok {
-                if util.InStringSlice(cInfo.Mobile, []string{"0930049641"}) == false {
+                if util.InStringSlice(cInfo.Mobile, []string{"0930049641", "0955011176", "0975498244", "0911835036"}) == false {
                     continue
                 }
                 bch := &rpcmodel.SendSmsBatch{
