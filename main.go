@@ -7,7 +7,6 @@ import (
     "github.com/gin-gonic/gin"
     "goldtalkAPI/conf"
     "goldtalkAPI/pkg/client"
-    "goldtalkAPI/pkg/schedule"
     "goldtalkAPI/pkg/thirdparty/go-log"
     "goldtalkAPI/routers"
     "net/http"
@@ -57,14 +56,14 @@ func main() {
     log.Init(&config.Log)
     defer log.Close()
 
-    client.InitRedis(config.Redis)
-    initHttpAPI(config.APIHost)
-
-    client.Setup(config.DB)
-    defer client.CloseDB()
-    //統計NumGoroutine
-    go monitorInfo()
-    go schedule.SchSendSmsAtSessionTime()
+    //client.InitRedis(config.Redis)
+    //initHttpAPI(config.APIHost)
+    //
+    //client.Setup(config.DB)
+    //defer client.CloseDB()
+    ////統計NumGoroutine
+    //go monitorInfo()
+    //go schedule.SchSendSmsAtSessionTime()
 
 
 

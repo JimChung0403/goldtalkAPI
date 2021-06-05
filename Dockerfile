@@ -1,4 +1,5 @@
-FROM golang:1.16.3
+FROM golang:1.15.13-alpine3.13
+RUN apk add make
 COPY . /app
 RUN cd /app && make
 WORKDIR /app/output
