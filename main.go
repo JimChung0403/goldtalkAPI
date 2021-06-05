@@ -91,8 +91,8 @@ func monitorInfo() {
 }
 
 
-func initHttpAPI(config conf.Config){
-    client.InitRDAAPI(config.APIHost.RDA)
-    client.InitPassportAPI(config.APIHost.Passport)
-    client.InitSMS(config.APIHost.SMS)
+func initHttpAPI(hostConf conf.APIHost){
+    client.InitRDAAPI(hostConf.RDA)
+    client.InitPassportAPI(hostConf.Passport)
+    client.InitSMS(hostConf.SMS)
 }
