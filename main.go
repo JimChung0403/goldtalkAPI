@@ -8,7 +8,6 @@ import (
     "goldtalkAPI/conf"
     "goldtalkAPI/pkg/client"
     "goldtalkAPI/pkg/schedule"
-    "goldtalkAPI/pkg/thirdparty/go-cache/redis_sentinel"
     "goldtalkAPI/pkg/thirdparty/go-log"
     "goldtalkAPI/routers"
     "net/http"
@@ -59,9 +58,6 @@ func main() {
     defer log.Close()
 
     client.InitRedis(config.Redis)
-    fmt.Println(redis.Set("aaaa", "111", time.Second))
-    fmt.Println(redis.GetString("aaaa"))
-
     initHttpAPI(config.APIHost)
 
     client.Setup(config.DB)
@@ -92,6 +88,7 @@ func monitorInfo() {
 
 
 func initHttpAPI(hostConf conf.APIHost){
+    log.Info("init webapi")
     client.InitRDAAPI(hostConf.RDA)
     client.InitPassportAPI(hostConf.Passport)
     client.InitSMS(hostConf.SMS)
