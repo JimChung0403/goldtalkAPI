@@ -36,7 +36,7 @@ func initHttpSvr(config conf.Config) *http.Server{
         MaxHeaderBytes: maxHeaderBytes,
     }
 
-    fmt.Printf("start http server listening %s\n", endPoint)
+    log.Infof("start http server listening %s\n", endPoint)
     return server
 }
 

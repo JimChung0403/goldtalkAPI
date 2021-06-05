@@ -1,0 +1,12 @@
+version: '3'
+services:
+  goldtalk_api:
+    build: .
+    image: goldtalk_img:${TAG}
+    container_name: goldtalkAPI
+    ports:
+      - "8001:8000"
+    environment:
+      - NODE_ENV=prod
+    volumes:
+      - /tmp/aaa:/app/output/log

@@ -1,0 +1,41 @@
+[server]
+runMode = "release"
+httpPort = 8000
+readTimeout = "1s"
+writeTimeout =  "1s"
+gin_file = "./log/gin.log"
+
+[log]
+file_path = "./log/all.log"
+level = "INFO"
+# unit: Mb
+max_size_mb = 2048
+max_backups = 5
+# "text" or "json"
+formatter = "text"
+show_file_line = true
+
+
+[database]
+type = "mysql"
+user = "un_thomaschen"
+password = "123456"
+host = "172.16.85.74:3306"
+name = "Gtalk"
+idleConns = 10
+openConns = 100
+
+[apihost]
+rda = "http://tutorgroupapi.tutorabc.com/ReservationDataAccess"
+passport = "http://apitw.passport.tutorabc.com/web"
+sms = "http://sms.tutorabc.com/twapi"
+
+[cachecloud]
+appid = 10002
+
+[redis]
+pool_size = 20
+prefix = ""
+
+[sms]
+appsn = "2c6cfb3f1805c00b3a09abd503850564"

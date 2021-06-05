@@ -14,7 +14,7 @@ CONF       = $(CURDIR)/conf
 all: build
 
 build: clean prepare
-	go build -o "$(OUTPUT)/bin/goldtalkAPI" "$(CURDIR)/main.go"
+	go build -o "$(OUTPUT)/bin/$(SUB_PACKAGE)" "$(CURDIR)/main.go"
 
 clean:
 	echo "====clean $(OUTPUT)"
@@ -23,6 +23,7 @@ clean:
 prepare:
 	mkdir -p "$(OUTPUT)/log"
 	cp -vr "$(CONF)" "$(OUTPUT)"
+	cp -v "$(CURDIR)/control.sh" "$(OUTPUT)"
 
 fmt:
 	go fmt ./...
