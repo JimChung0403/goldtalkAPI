@@ -8,8 +8,8 @@ import (
 func InitClients(config conf.Config) {
 	log.Init(&config.Log)
 	InitRedis(config.Redis)
-    InitRDAAPI("http://httpbin.org")
-    InitPassportAPI("http://apitw.passport.tutorabc.com/web")
-	InitSMS("http://sms.tutorabc.com/twapi")
+    InitRDAAPI(config.APIHost.RDA)
+    InitPassportAPI(config.APIHost.Passport)
+	InitSMS(config.APIHost.SMS)
 	//Setup(config.DB)
 }

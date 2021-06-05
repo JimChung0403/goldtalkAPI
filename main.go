@@ -62,9 +62,7 @@ func main() {
     fmt.Println(redis.Set("aaaa", "111", time.Second))
     fmt.Println(redis.GetString("aaaa"))
 
-    client.InitRDAAPI("http://tutorgroupapi.tutorabc.com/ReservationDataAccess")
-    client.InitPassportAPI("http://apitw.passport.tutorabc.com/web")
-    client.InitSMS("http://sms.tutorabc.com/twapi")
+    initHttpAPI(config.APIHost)
 
     client.Setup(config.DB)
     defer client.CloseDB()
@@ -90,4 +88,11 @@ func monitorInfo() {
         }
     }
     return
+}
+
+
+func initHttpAPI(config conf.Config){
+    client.InitRDAAPI(config.APIHost.RDA)
+    client.InitPassportAPI(config.APIHost.Passport)
+    client.InitSMS(config.APIHost.SMS)
 }
