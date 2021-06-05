@@ -14,7 +14,6 @@ func Test_Initial(t *testing.T) {
 		conf.LoadConfigFile("../../conf/service.conf")
 		InitClients(conf.Conf)
 
-
 		//fmt.Println("###")
 		//fmt.Println(redis.SetNXExpired("lock_key", "1", time.Second * 10))
 		//fmt.Println("###")
