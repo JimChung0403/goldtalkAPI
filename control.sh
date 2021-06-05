@@ -26,6 +26,7 @@ function start() {
 	setConfigFile
 	echo "bin$MY_PATH/bin/$SERVICE_NAME"
 	echo "$MY_PATH/conf/$CONF_NAME"
+	./bin/goldtalkAPI
 }
 
 function stop() {
