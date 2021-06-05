@@ -22,3 +22,16 @@ func JsonUnmarshalFromString(jsonStr string, v interface{}) error {
 	}
 	return err
 }
+
+
+func InStringSlice(val string, ss []string) bool {
+	if len(val) == 0 {
+		return false
+	}
+	for _, s := range ss {
+		if val == s {
+			return true
+		}
+	}
+	return false
+}

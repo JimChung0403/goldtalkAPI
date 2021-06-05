@@ -5,6 +5,7 @@ import (
     "fmt"
     "goldtalkAPI/pkg/dao"
     "goldtalkAPI/pkg/rpc"
+    "goldtalkAPI/pkg/rpcmodel"
     "goldtalkAPI/pkg/thirdparty/go-log"
     "goldtalkAPI/pkg/thirdparty/go-trace"
     "goldtalkAPI/pkg/util"
@@ -12,12 +13,15 @@ import (
 )
 
 const (
-    querySize = 100
+    querySize  = 100
+    contentFmt = "%s %s，快到上課時間囉！提醒您，開課前3分鐘，點擊以下連結進入教室。%s"
+    courseUrl  = "https://www.gogoldtalk.com/course/%s"
+    signature  = "TutorABC"
 )
 
 func SchSendSmsAtSessionTime() {
 
-    var timer *time.Ticker = time.NewTicker(time.Second * 10)
+    var timer *time.Ticker = time.NewTicker(time.Minute * 10)
     defer timer.Stop()
     for {
         select {
@@ -30,8 +34,7 @@ func SchSendSmsAtSessionTime() {
                 log.Errorf("_com_sch_error||%v||SchSendSmsAtSessionTime error||err=%v", trace.FromContext(ctx), err)
                 break
             }
-            for i, d := range dataList {
-                fmt.Sprint(d)
+            for i, _ := range dataList {
                 go SendSmsBySessionInfo(ctx, dataList[i])
             }
 
@@ -41,19 +44,22 @@ func SchSendSmsAtSessionTime() {
     return
 }
 
-type SMSContent struct {
-    Msg   string
-    Phone string
-}
-
 func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
 
+    smsConent := fmt.Sprint(contentFmt,
+        util.TimeMin2Str(info.SessionStartTime),
+        info.Topic,
+        fmt.Sprint(courseUrl, info.ID),
+    )
     classInfoList, err := rpc.GetClassInformationByLobbySn(info.RefNo1)
     if err != nil {
         log.Errorf("_com_sch_error||%v||GetClassInformationByLobbySn error||err=%v", trace.FromContext(ctx), err)
         return
     }
 
+    log.Infof("%v||SendSmsBySessionInfo: %s||bch: %s", trace.ContextString(ctx), util.JsonString(info), util.JsonString(classInfoList))
+
+    return
     cList := []int64{}
     cMap := make(map[int64]struct{})
     for _, info := range classInfoList {
@@ -73,18 +79,27 @@ func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
             return
         }
 
-        aa := []*SMSContent{}
-        for clientSn, Info := range cusBaseInfoMap {
-            if _, ok := cMap[clientSn]; ok {
-                aa = append(aa, &SMSContent{
-                    Msg:   "",
-                    Phone: Info.Mobile,
-                })
+        smsReq := []*rpcmodel.SendSmsBatch{}
+        for sn, cInfo := range cusBaseInfoMap {
+            if _, ok := cMap[sn]; ok {
+                if util.InStringSlice(cInfo.Mobile, []string{"0930049641", "0955011176", "0975498244", "0911835036"}) == false {
+                    continue
+                }
+                bch := &rpcmodel.SendSmsBatch{
+                    Phone:         cInfo.Mobile,
+                    Countrycode:   cInfo.Countryarea,
+                    Message:       smsConent,
+                    Signaturecode: signature,
+                }
+                smsReq = append(smsReq, bch)
+                log.Infof("%v||cusBaseInfoMap: %s||bch: %v", trace.ContextString(ctx), err, util.JsonString(bch))
             }
         }
 
-    }
+        err = rpc.SendSMSBatch(ctx, smsReq)
+        log.Infof("%v||SendSMSBatch: %s||session: %v", trace.ContextString(ctx), err, util.JsonString(info))
 
+    }
     return
 }
 
