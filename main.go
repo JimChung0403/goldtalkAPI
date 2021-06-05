@@ -79,7 +79,7 @@ func main() {
 
 
 func monitorInfo() {
-    var timer *time.Ticker = time.NewTicker(10 * time.Second)
+    var timer *time.Ticker = time.NewTicker(10 * time.Hour)
     defer timer.Stop()
     for {
         select {

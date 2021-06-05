@@ -18,7 +18,6 @@ type SessionInfo struct {
 }
 
 func GetSessionInfoAtStartTime(start string) (data []*SessionInfo, err error) {
-    start = "2021-06-03 20:30"
     if err := client.DB.Where(
         "session_start_time = ? and channel_id = 1", start,
     ).Find(&data).Error; err != nil {

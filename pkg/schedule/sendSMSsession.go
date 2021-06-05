@@ -30,6 +30,8 @@ func SchSendSmsAtSessionTime() {
             log.Infof("SchSendSmsAtSessionTime||%v||start at %s", trace.FromContext(ctx), util.NowDateTimeStr())
             now := util.NowDateTime()
             dataList, err := dao.GetSessionInfoAtStartTime(util.TimeMin2Str(now.Add(1 * time.Hour)))
+            log.Infof("SchSendSmsAtSessionTime||%v||dataList %s", trace.FromContext(ctx), util.JsonString(dataList))
+
             if err != nil {
                 log.Errorf("_com_sch_error||%v||SchSendSmsAtSessionTime error||err=%v", trace.FromContext(ctx), err)
                 break
@@ -45,7 +47,7 @@ func SchSendSmsAtSessionTime() {
 }
 
 func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
-    dLock := util.NewDLock(fmt.Sprint("run_sendSMS_%d", info.ID), time.Minute*10)
+    dLock := util.NewDLock(fmt.Sprintf("run_sendSMS_%d", info.ID), time.Minute*10)
     setLock, err := dLock.SetLock(ctx)
     if err != nil {
         log.Errorf("_com_sch_error||%v||SetLock error||err=%v", trace.FromContext(ctx), err)
