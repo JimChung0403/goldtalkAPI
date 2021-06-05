@@ -2,7 +2,6 @@ package cache
 
 import (
 	"fmt"
-	logger "scm.tutorabc.com/Research/GoBank/goutil/log"
 	"strconv"
 	"sync"
 	"testing"
@@ -116,9 +115,9 @@ func TestCache(t *testing.T) {
 		for i := 0; i < 100; i++ {
 			time.Sleep(100 * time.Millisecond)
 			if v, err := cache.Get(fmt.Sprintf("key%d", i)); err != nil {
-				logger.Errorf("fail to get key%d", i)
+				fmt.Println(fmt.Sprint("fail to get key%d" , i))
 			} else {
-				logger.Infof("got key%d:%v", i, v)
+				fmt.Println(fmt.Sprint("got key%d:%v", i, v))
 			}
 		}
 		wg.Done()

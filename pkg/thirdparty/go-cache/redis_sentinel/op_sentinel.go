@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"errors"
-	logger "scm.tutorabc.com/Research/goutil/log"
 	"github.com/gomodule/redigo/redis"
 	"strings"
 	"time"
@@ -183,13 +182,11 @@ func Set(key string, val interface{}, expired time.Duration) error {
 	buffer := bytes.NewBuffer(nil)
 	enc := gob.NewEncoder(buffer)
 	if err := enc.Encode(val); err != nil {
-		logger.Error("Set:encode:", err)
-		return err
+		return errors.New("Set:encode:" + err.Error())
 	}
 
 	if err := SetBytes(key, buffer.Bytes(), expired); err != nil {
-		logger.Error("Set:SetBytes:", err)
-		return err
+		return errors.New("Set:SetBytes:" + err.Error())
 	}
 
 	return nil
@@ -202,8 +199,7 @@ func Delete(key string) error {
 
 	_, err := redis.Int(con.Do(op_DEL, prekey+key))
 	if err != nil {
-		logger.Error("Delete:", err)
-		return err
+		return errors.New("Delete:" + err.Error())
 	}
 
 	return nil
@@ -221,9 +217,8 @@ func Zadd(key string, score int64, member string) (isAdd bool, err error) {
 
 	ret, err := conn.Do(op_ZADD, prekey+key, score, member)
 	if err != nil {
-		logger.Error("Zadd:", err)
 		isAdd = false
-		return
+		return isAdd, errors.New("Zadd:" + err.Error())
 	} else {
 		if ret.(int64) == 0 {
 			isAdd = false
@@ -244,7 +239,7 @@ func Zcount(key string, min, max interface{}) (count int64, err error) {
 
 	n, err := conn.Do(op_ZCOUNT, prekey+key, min, max)
 	if err != nil {
-		logger.Error("Zcount:", err)
+		err = errors.New("Zcount:" + err.Error())
 		return
 	}
 
@@ -276,8 +271,7 @@ func Zrank(key, member string) (int64, error) {
 
 	rank, err := conn.Do(op_ZRANK, prekey+key, member)
 	if err != nil {
-		logger.Error("Zrank:", err)
-		return -1, err
+		return -1, errors.New("Zrank:" + err.Error())
 	}
 
 	if rank == nil {
@@ -296,27 +290,14 @@ func Zrem(key string, members ...string) error {
 	for _, member := range members {
 		err = con.Send(op_ZREM, prekey+key, member)
 		if err != nil {
-			logger.Error("Zrem send:", err)
-			return err
+			return errors.New("Zrem send:" + err.Error())
 		}
 	}
 	err = con.Flush()
 	if err != nil {
-		logger.Error("Zrem flush:", err)
-		return err
+		return errors.New("Zrem flush:" + err.Error())
 	}
 	return nil
-
-	for i := 0; i < len(members); i++ {
-		_, err = con.Receive()
-		if err != nil {
-			logger.Error("Zrem receive:", err)
-			if receiveErr == nil {
-				receiveErr = err
-			}
-		}
-	}
-	return receiveErr
 }
 
 // hash: hincrby
@@ -327,8 +308,7 @@ func Hincrby(key, field string, num interface{}) (interface{}, error) {
 	args := redis.Args{}.Add(prekey+key, field, num)
 	ret, err := conn.Do(op_HINCRBY, args...)
 	if err != nil {
-		logger.Error("Hincrby:", err)
-		return nil, err
+		return nil, errors.New("Hincrby:" + err.Error())
 	}
 
 	return ret, nil
@@ -342,8 +322,7 @@ func Hmget(key string, fields ...interface{}) ([]interface{}, error) {
 	args := append([]interface{}{prekey + key}, fields...)
 	ret, err := conn.Do(op_HMGET, args...)
 	if err != nil {
-		logger.Error("Hmget:", err)
-		return nil, err
+		return nil, errors.New("Hmget:" + err.Error())
 	}
 
 	return ret.([]interface{}), nil
@@ -360,8 +339,7 @@ func Hmset(key string, pairs ...interface{}) error {
 	args := append([]interface{}{prekey + key}, pairs...)
 	_, err := conn.Do(op_HMSET, args...)
 	if err != nil {
-		logger.Error("Hmset:", err)
-		return err
+		return errors.New("Hmset:" + err.Error())
 	}
 	return nil
 }
@@ -376,8 +354,7 @@ func Hmset2(key string, pair interface{}) error {
 
 	_, err := conn.Do(op_HMSET, redis.Args{}.Add(prekey+key).AddFlat(pair)...)
 	if err != nil {
-		logger.Error("Hmset:", err)
-		return err
+		return errors.New("Hmset:" + err.Error())
 	}
 	return nil
 }
@@ -393,14 +370,12 @@ func Hgetall(key string, objPtr interface{}) error {
 	// if not found, err still equals nil
 	ret, err := redis.Values(conn.Do(op_HGETALL, prekey+key))
 	if err != nil {
-		logger.Error("Hgetall:", err)
-		return err
+		return errors.New("Hgetall:" + err.Error())
 	}
 
 	err = redis.ScanStruct(ret, objPtr)
 	if err != nil {
-		logger.Error("Hgetall:", err)
-		return err
+		return errors.New("Hgetall:" + err.Error())
 	}
 
 	return nil
@@ -411,13 +386,11 @@ func PexpireSecond(key string, seconds int64) error {
 	var errMsg string
 	if key == "" {
 		errMsg = "PexpireSecond: key can't be empty"
-		logger.Error("PexpireSecond:", errMsg)
 		return errors.New(errMsg)
 	}
 
 	if seconds <= 0 {
 		errMsg = "PexpireSecond: seconds can't be set <= 0"
-		logger.Error("PexpireSecond:", errMsg)
 		return errors.New(errMsg)
 	}
 
@@ -426,8 +399,7 @@ func PexpireSecond(key string, seconds int64) error {
 
 	_, err := conn.Do(op_PEXPIRE, prekey+key, 1000*seconds)
 	if err != nil {
-		logger.Error("PexpireSecond:", err)
-		return err
+		return errors.New("PexpireSecond:" + err.Error())
 	}
 
 	return nil
@@ -444,8 +416,7 @@ func LPush(key string, value interface{}) (data int, err error) {
 	ret, err := redis.Int(conn.Do(op_LPUSH, prekey+key, value))
 
 	if err != nil {
-		logger.Error("Hgetall:", err)
-		return ret, err
+		return ret, errors.New("Hgetall:" + err.Error())
 	}
 	return ret, nil
 }
@@ -457,7 +428,7 @@ func LPushBatch(key string, values interface{}) (data int, err error) {
 	reply, err := redis.Int(conn.Do("LPUSH", args...))
 
 	if err != nil {
-		logger.Error("LPushBatch:", err)
+		err = errors.New("LPushBatch:" + err.Error())
 		return
 	}
 	data = reply
@@ -470,7 +441,7 @@ func LTrim(key string, start, end int64) (err error) {
 
 	_, err = redis.String(conn.Do(op_LTRIM, prekey+key, start, end))
 	if err != nil {
-		logger.Error("LTrim:", err)
+		err = errors.New("LTrim:" + err.Error())
 		return
 	}
 	return
@@ -483,7 +454,7 @@ func IsExist(key string) (bool, error) {
 	var err error
 	ret, err = redis.Int(conn.Do(op_EXIST, prekey+key))
 	if err != nil {
-		logger.Error("Exist:", err)
+		err = errors.New("Exist:" + err.Error())
 		return false, err
 	}
 	return ret == 1, err

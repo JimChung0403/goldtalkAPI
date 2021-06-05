@@ -2,7 +2,7 @@ package redis
 
 import (
 	"fmt"
-	"scm.tutorabc.com/Research/goutil/collection/hashmap"
+	"goldtalkAPI/pkg/thirdparty/go-collection/hashmap"
 	"testing"
 	"time"
 )

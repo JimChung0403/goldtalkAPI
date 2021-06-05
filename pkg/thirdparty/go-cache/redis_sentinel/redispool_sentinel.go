@@ -2,10 +2,9 @@ package redis
 
 import (
 	"errors"
-	logger "scm.tutorabc.com/Research/goutil/log"
-	"scm.tutorabc.com/Research/goutil/util"
 	"github.com/FZambia/sentinel"
 	"github.com/gomodule/redigo/redis"
+	"strings"
 	"time"
 )
 
@@ -21,14 +20,14 @@ var (
 // Pool returns singleton instance
 func SentinelPool() *redis.Pool {
 	if sentinelPool == nil {
-		logger.Error("sentinelPool is empty")
+		//todo: 应该要返回 nil, err
 	}
 	return sentinelPool
 }
 
 func InitSentinelRedisPool(addrs []string, masterName string, size int, prefix string) {
 	sentinelPool = newSentinelPool(addrs, masterName, size)
-	if !util.IsEmptyStr(prefix) {
+	if strings.TrimSpace(prefix) != "" {
 		prekey = prefix + "."
 	} else {
 		prekey = ""
