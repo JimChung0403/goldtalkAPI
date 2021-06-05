@@ -14,7 +14,7 @@
 debug
 
 # DiDi specific
-output
+#output
 nohup.out
 _upgrade
 *.pid
