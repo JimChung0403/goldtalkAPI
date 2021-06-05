@@ -45,6 +45,16 @@ func SchSendSmsAtSessionTime() {
 }
 
 func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
+    dLock := util.NewDLock(fmt.Sprint("run_sendSMS_%d", info.ID), time.Minute*10)
+    setLock, err := dLock.SetLock(ctx)
+    if err != nil {
+        log.Errorf("_com_sch_error||%v||SetLock error||err=%v", trace.FromContext(ctx), err)
+        return
+    }
+    if setLock == false{
+        log.Infof("_com_sch_||%v||NewDLock_Lock: %v", trace.FromContext(ctx), dLock.MyKey())
+        return
+    }
 
     smsConent := fmt.Sprint(contentFmt,
         util.TimeMin2Str(info.SessionStartTime),
@@ -59,7 +69,7 @@ func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
 
     log.Infof("%v||SendSmsBySessionInfo: %s||bch: %s", trace.ContextString(ctx), util.JsonString(info), util.JsonString(classInfoList))
 
-    return
+    //return
     cList := []int64{}
     cMap := make(map[int64]struct{})
     for _, info := range classInfoList {
@@ -67,7 +77,6 @@ func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
         cMap[info.Clientsn] = struct{}{}
     }
     count := len(cList)
-
     for no := 0; no <= (count / querySize); no++ {
         pagingIDs := paginate(cList, no*querySize, querySize)
         if len(pagingIDs) == 0 {
@@ -96,7 +105,7 @@ func SendSmsBySessionInfo(ctx context.Context, info *dao.SessionInfo) {
             }
         }
 
-        err = rpc.SendSMSBatch(ctx, smsReq)
+        //err = rpc.SendSMSBatch(ctx, smsReq)
         log.Infof("%v||SendSMSBatch: %s||session: %v", trace.ContextString(ctx), err, util.JsonString(info))
 
     }

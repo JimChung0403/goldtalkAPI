@@ -16,8 +16,10 @@ type GOBEntry struct {
 
 func TestSet(t *testing.T) {
 
-	addrs := []string{"172.16.235.145:26381", "172.16.235.145:26382", "172.16.235.145:26383"}
-	InitSentinelRedisPool(addrs, "mymaster", 20, "test")
+	conf := Config{
+		Addrs: []string{"172.16.235.145:26381", "172.16.235.145:26382", "172.16.235.145:26383"},
+	}
+	InitSentinelRedisPool(conf)
 
 	bb := &GOBEntry{
 		Id:   123,
@@ -49,7 +51,7 @@ func TestSet(t *testing.T) {
 
 	t.Logf("%#v", b)
 
-	if err := Delete("ddd"); err != nil {
+	if _, err := Delete("ddd"); err != nil {
 		t.Error(err)
 		t.Fail()
 	}

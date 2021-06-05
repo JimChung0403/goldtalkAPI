@@ -1,8 +1,9 @@
 package util
 
 import (
+	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"goldtalkAPI/pkg/thirdparty/go-trace"
 	"strings"
 	"time"
 )
@@ -96,8 +97,10 @@ func (lb LogBuild) String() string {
 			dltag += fmt.Sprintf("_%s", value)
 		case "_logtype":
 			logtype = fmt.Sprintf("_%s", value)
-		case "_traceid":
-			list = append(list, fmt.Sprintf("traceid=%v", value))
+		case "_ctx":
+			if value, ok := value.(context.Context); ok {
+				list = append(list, fmt.Sprintf("%v", trace.FromContext(value)))
+			}
 		case "_startTime":
 			if value, ok := value.(time.Time); ok {
 				list = append(list, fmt.Sprintf("cost=%v", time.Since(value).Seconds()))
@@ -110,10 +113,10 @@ func (lb LogBuild) String() string {
 	return dltag + logtype + "||" + strings.Join(list, "||")
 }
 
-func NewLogBuild(ctx *gin.Context, action string) LogBuild {
+func NewLogBuild(ctx context.Context, action string) LogBuild {
 	lb := make(LogBuild)
 	lb.Set("_action", action)
-	lb.Set("_traceid", FromGinContext(ctx))
+	lb.Set("_ctx", ctx)
 	lb.Set("_startTime", time.Now())
 
 	return lb

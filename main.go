@@ -8,6 +8,7 @@ import (
     "goldtalkAPI/conf"
     "goldtalkAPI/pkg/client"
     "goldtalkAPI/pkg/schedule"
+    "goldtalkAPI/pkg/thirdparty/go-cache/redis_sentinel"
     "goldtalkAPI/pkg/thirdparty/go-log"
     "goldtalkAPI/routers"
     "net/http"
@@ -56,6 +57,10 @@ func main() {
     config := conf.Conf
     log.Init(&config.Log)
     defer log.Close()
+
+    client.InitRedis(config.Redis)
+    fmt.Println(redis.Set("aaaa", "111", time.Second))
+    fmt.Println(redis.GetString("aaaa"))
 
     client.InitRDAAPI("http://tutorgroupapi.tutorabc.com/ReservationDataAccess")
     client.InitPassportAPI("http://apitw.passport.tutorabc.com/web")

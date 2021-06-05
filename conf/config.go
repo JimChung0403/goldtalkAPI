@@ -3,6 +3,7 @@ package conf
 import (
     "fmt"
     "github.com/BurntSushi/toml"
+    "goldtalkAPI/pkg/thirdparty/go-cache/redis_sentinel"
     "goldtalkAPI/pkg/thirdparty/go-log"
     "path/filepath"
     "time"
@@ -28,7 +29,7 @@ type ServerConfig struct {
     HttpPort     int      `toml:"httpPort"`
     ReadTimeout  duration `toml:"readTimeout"`
     WriteTimeout duration `toml:"writeTimeout"`
-    GinFile string `toml:"gin_file"`
+    GinFile      string   `toml:"gin_file"`
 }
 
 type Database struct {
@@ -43,17 +44,17 @@ type Database struct {
 }
 
 type SMS struct {
-    AppSn        string `toml:"appsn"`
+    AppSn string `toml:"appsn"`
 }
-
 
 // 对应 conf/service.conf 的结构。
 type Config struct {
     Server ServerConfig `toml:"server"`
     Log    log.Config   `toml:"log"`
 
-    DB Database `toml:"database"`
-    SMS SMS `toml:"sms"`
+    DB    Database     `toml:"database"`
+    SMS   SMS          `toml:"sms"`
+    Redis redis.Config `toml:"redis"`
     //RedisConf            redis.Config         `toml:"redis"`
     //DApi                 client.Config        `toml:"d_api"`
 }
