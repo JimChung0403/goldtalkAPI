@@ -31,6 +31,9 @@ fmt:
 run:
 	cd "$(OUTPUT)" && bin/$(APP)
 
+swag:
+	swag init
+
 
 .PHONY: all build fmt clean prepare run test init upgrade
 $(VERBOSE).SILENT:

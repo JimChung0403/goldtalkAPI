@@ -1,0 +1,17 @@
+info:
+  contact: {}
+paths:
+  /api/tutors/:language:
+    get:
+      operationId: "1"
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 測試用
+      tags:
+      - Hello
+swagger: "2.0"

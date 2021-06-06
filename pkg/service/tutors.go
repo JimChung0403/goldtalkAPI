@@ -17,6 +17,13 @@ type TutorListByLang struct {
     Data       []*model.TutorData
 }
 
+// @Summary 測試用
+// @Id 1
+// @Tags Hello
+// @version 1.0
+// @produce application/json
+// @Success 200 string string 成功後返回的值
+// @Router /api/tutors/:language [get]
 func GetTutorList(c *gin.Context) {
     ctx := util.NewContextFromGin(c)
     appG := app.Gin{C: c}
