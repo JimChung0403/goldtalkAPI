@@ -6,7 +6,7 @@ services:
     container_name: goldtalkAPI
     restart: always
     ports:
-      - "8001:8000"
+      - "8000:8000"
     environment:
       - NODE_ENV=prod
     volumes:
