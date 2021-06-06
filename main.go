@@ -3,7 +3,8 @@ package main
 import (
     "flag"
     "fmt"
-    "github.com/BurntSushi/toml"
+    "goldtalkAPI/pkg/util"
+    "goldtalkAPI/pkg/thirdparty/toml"
     "github.com/gin-gonic/gin"
     "goldtalkAPI/conf"
     "goldtalkAPI/pkg/client"
@@ -31,8 +32,8 @@ func initHttpSvr(config conf.Config) *http.Server{
     server := &http.Server{
         Addr:           endPoint,
         Handler:        routersInit,
-        ReadTimeout:    readTimeout.Duration,
-        WriteTimeout:   writeTimeout.Duration,
+        ReadTimeout:    readTimeout,
+        WriteTimeout:   writeTimeout,
         MaxHeaderBytes: maxHeaderBytes,
     }
 
@@ -53,6 +54,9 @@ func main() {
         return
     }
     config := conf.Conf
+
+    fmt.Println(util.JsonString(config))
+    os.Exit(1)
     log.Init(&config.Log)
     defer log.Close()
 

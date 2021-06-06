@@ -14,11 +14,11 @@ BASE_CONF_NAME="$MY_PATH/conf/$CONF_NAME"
 
 function setConfigFile() {
     echo "pwd: $MY_PATH"
-    echo "NODE_ENV: $NODE_ENV"
-    if [ "$NODE_ENV" ]; then
+    echo "ENV_TAG: $ENV_TAG"
+    if [ "$ENV_TAG" ]; then
         echo "change to conf"
         rm -f "$BASE_CONF_NAME"
-        ln -s "$BASE_CONF_NAME.$NODE_ENV" "$BASE_CONF_NAME"
+        ln -s "$BASE_CONF_NAME.$ENV_TAG" "$BASE_CONF_NAME"
     fi
 }
 

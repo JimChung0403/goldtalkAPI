@@ -11,7 +11,7 @@ func (SessionInfo) TableName() string {
 
 type SessionInfo struct {
     ID               int64     `gorm:"id"`
-    RefNo1               int64     `gorm:"ref_no1"`
+    RefNo1           int64     `gorm:"ref_no1"`
     SessionStartTime time.Time `gorm:"session_start_time"`
     SessionEndTime   time.Time `gorm:"session_end_time"`
     Topic            string    `gorm:"topic"`

@@ -20,7 +20,7 @@ type Config struct {
     PoolSize    int           `toml:"pool_size"`
     Prefix      string        `toml:"prefix"`
     MasterName  string        `toml:"master_name"`
-    MaxIdle     int           `toml:"max_idle"`     // 连接超时时间，默认是 DefaultConnTimeout。
+    MaxIdle     int           `toml:"max_idle"`
     IdleTimeout time.Duration `toml:"idle_timeout"` // 如果连接空闲，自动断开的时间，默认是 DefaultIdleTimeout。
     ConnTimeout time.Duration `toml:"conn_timeout"` // 连接超时时间，默认是 DefaultConnTimeout。
     SendTimeout time.Duration `toml:"send_timeout"` // 发送数据超时时间，默认是 DefaultSendTimeout。

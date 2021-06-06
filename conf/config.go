@@ -13,22 +13,12 @@ var (
     Conf Config
 )
 
-type duration struct {
-    time.Duration
-}
-
-func (d *duration) UnmarshalText(text []byte) error {
-    var err error
-    d.Duration, err = time.ParseDuration(string(text))
-    return err
-}
-
 // Config 表示一个 thrift 服务器的配置。
 type ServerConfig struct {
     RunMode      string   `toml:"runMode"`
     HttpPort     int      `toml:"httpPort"`
-    ReadTimeout  duration `toml:"readTimeout"`
-    WriteTimeout duration `toml:"writeTimeout"`
+    ReadTimeout  time.Duration `toml:"readTimeout"`
+    WriteTimeout time.Duration `toml:"writeTimeout"`
     GinFile      string   `toml:"gin_file"`
 }
 

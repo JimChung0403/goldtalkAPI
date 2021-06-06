@@ -8,6 +8,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - NODE_ENV=prod
+      - ENV_TAG=prod
     volumes:
       - /tmp/aaa:/app/output/log
