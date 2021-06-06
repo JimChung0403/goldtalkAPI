@@ -13,5 +13,8 @@ func SetTrace() gin.HandlerFunc {
         traceInfo["traceid"] = traceID.String()
         //fmt.Println("setTrace: ", traceID.String())
         c.Set("_tr", traceInfo)
+        c.Writer.Header().Add("Tutor-Header-TraceID", traceID.String())
+        c.Next()
+
     }
 }

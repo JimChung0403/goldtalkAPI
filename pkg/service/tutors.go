@@ -14,17 +14,20 @@ import (
 
 type TutorListByLang struct {
     LastUpdate time.Time
-    Data       []*model.TutorData
+    Data       []*model.PriceInfo
 }
 
+//https://github.com/swaggo/gin-swagger/blob/master/example/basic/api/api.go
+// @Tags 第一類
 // @Summary 測試用
-// @Id 1
-// @Tags Hello
+// @Id ###@@@
+// @Param language path string true "language"
 // @version 1.0
-// @produce application/json
-// @Success 200 string string 成功後返回的值
-// @Router /api/tutors/:language [get]
-func GetTutorList(c *gin.Context) {
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} TutorListByLang data
+// @Router /api/test/{language} [get]
+func Test(c *gin.Context) {
     ctx := util.NewContextFromGin(c)
     appG := app.Gin{C: c}
     //lb := util.NewLogBuild(c, "GetTutorList")
@@ -34,7 +37,7 @@ func GetTutorList(c *gin.Context) {
     //
     fmt.Println(trace.FromContext(ctx))
     ////驗證參數
-    //language := c.Param("language")
+    language := c.Param("language")
     //if language == "" {
     //    appG.Response(http.StatusOK, app.INVALID_PARAMS, nil)
     //    return
@@ -50,5 +53,5 @@ func GetTutorList(c *gin.Context) {
     //    return
     //}
     //
-    appG.Response(http.StatusOK, app.SUCCESS, 1)
+    appG.Response(http.StatusOK, app.SUCCESS, language)
 }

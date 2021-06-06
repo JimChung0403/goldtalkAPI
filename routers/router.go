@@ -38,7 +38,7 @@ func InitRouter() *gin.Engine {
     apiv1.Use()
     {
         //取得教師列表
-        apiv1.GET("/tutors/:language", service.GetTutorList)
+        apiv1.GET("/test/:language", service.Test)
 
     }
 

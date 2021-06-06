@@ -23,23 +23,62 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/tutors/:language": {
+        "/api/test/{language}": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Hello"
+                    "第一類"
                 ],
                 "summary": "測試用",
-                "operationId": "1",
+                "operationId": "###@@@",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "language",
+                        "name": "language",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/service.TutorListByLang"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.PriceInfo": {
+            "type": "object",
+            "properties": {
+                "normal": {
+                    "type": "number"
+                },
+                "trial": {
+                    "type": "number"
+                }
+            }
+        },
+        "service.TutorListByLang": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.PriceInfo"
+                    }
+                },
+                "lastUpdate": {
+                    "type": "string"
                 }
             }
         }

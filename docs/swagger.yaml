@@ -1,17 +1,42 @@
+definitions:
+  model.PriceInfo:
+    properties:
+      normal:
+        type: number
+      trial:
+        type: number
+    type: object
+  service.TutorListByLang:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.PriceInfo'
+        type: array
+      lastUpdate:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /api/tutors/:language:
+  /api/test/{language}:
     get:
-      operationId: "1"
+      consumes:
+      - application/json
+      operationId: '###@@@'
+      parameters:
+      - description: language
+        in: path
+        name: language
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/service.TutorListByLang'
       summary: 測試用
       tags:
-      - Hello
+      - 第一類
 swagger: "2.0"
