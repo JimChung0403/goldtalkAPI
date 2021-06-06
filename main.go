@@ -3,12 +3,11 @@ package main
 import (
     "flag"
     "fmt"
-    "goldtalkAPI/pkg/util"
-    "goldtalkAPI/pkg/thirdparty/toml"
     "github.com/gin-gonic/gin"
     "goldtalkAPI/conf"
     "goldtalkAPI/pkg/client"
     "goldtalkAPI/pkg/thirdparty/go-log"
+    "goldtalkAPI/pkg/thirdparty/toml"
     "goldtalkAPI/routers"
     "net/http"
     "os"
@@ -54,9 +53,6 @@ func main() {
         return
     }
     config := conf.Conf
-
-    fmt.Println(util.JsonString(config))
-    os.Exit(1)
     log.Init(&config.Log)
     defer log.Close()
 
