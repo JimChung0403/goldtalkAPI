@@ -8,6 +8,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - ENV_TAG=prod
+      - ENV_TAG=prd
     volumes:
       - /tmp/aaa:/app/output/log

@@ -42,9 +42,9 @@ func traceResp(c *gin.Context) (t TraceResp) {
 }
 
 const (
-    SUCCESS        = 200
-    ERROR          = 500
-    INVALID_PARAMS = 400
+    SUCCESS        = 0
+    ERROR          = -10
+    INVALID_PARAMS = -9999
 )
 
 var MsgFlags = map[int]string{
